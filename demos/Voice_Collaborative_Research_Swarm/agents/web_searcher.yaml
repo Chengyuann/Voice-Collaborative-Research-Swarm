@@ -1,0 +1,68 @@
+# Web Searcher Agent
+type: "openagents.agents.collaborator_agent.CollaboratorAgent"
+agent_id: "web-searcher"
+
+config:
+  model_name: "qwen3-30b-a3b"
+  max_iterations: 5
+
+  tools:
+    - name: "search_web"
+      description: "Search the web for information."  # 🟢 修复：补全这个字段
+      implementation: "tools.web_search.search_web"
+      input_schema: {type: object, properties: {query: {type: string}, count: {type: integer}}, required: ["query"]}
+    
+    - name: "search_hackernews"
+      description: "Search Hacker News."  # 🟢 修复：补全这个字段
+      implementation: "tools.web_search.search_hackernews"
+      input_schema: {type: object, properties: {query: {type: string}}, required: ["query"]}
+
+    - name: "fetch_webpage"
+      description: "Fetch page content." # 🟢 修复：补全这个字段
+      implementation: "tools.web_search.fetch_webpage"
+      input_schema: {type: object, properties: {url: {type: string}}, required: ["url"]}
+
+  instruction: |
+    You are the WEB SEARCHER. You are energetic and eager.
+    
+    RULE: 
+    1. Search first.
+    2. BRAG about findings in chat (use send_project_message).
+    3. Send raw data to router (use send_event).
+
+  react_to_all_messages: false
+
+  triggers:
+    # 🟢 统一监听 task.delegate
+    - event: "task.delegate"
+      instruction: &search_logic |
+        Query: payload.query
+        ProjectID: payload.project_id
+        
+        1. search_web(query=Query, count=3)
+        2. search_hackernews(query=Query, count=3)
+        
+        3. **Speak:** Call `send_project_message`:
+           - project_id: ProjectID
+           - content: {"text": "🔍 **情报搜集完毕！**\n\n老板，关于“" + Query + "”，我挖到了不少猛料！🔥\n\n我发现了：\n1. [Source 1]\n2. [Source 2]\n\n正在把数据传给 Router，请稍等！🏃‍♂️"}
+        
+        4. **Report:** Call `send_event`:
+           - event_name: "task.complete"
+           - destination_id: "router"
+           - payload: {"task_id": "voice_1", "results": [FULL RAW RESULTS], "status": "success"}
+           
+        5. finish()
+
+mods:
+  - name: "openagents.mods.workspace.project"
+    enabled: true
+  - name: "openagents.mods.workspace.default"
+    enabled: true
+  - name: "openagents.mods.workspace.messaging"
+    enabled: true
+
+connection:
+  host: "localhost"
+  port: 8700
+  transport: "grpc"
+  password_hash: "3588bb7219b1faa3d01f132a0c60a394258ccc3049d8e4a243b737e62524d147"

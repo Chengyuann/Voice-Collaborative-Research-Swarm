@@ -1,0 +1,9 @@
+{
+  "env_vars": {
+    "DEFAULT_LLM_PROVIDER": "openai-compatible",
+    "DEFAULT_LLM_MODEL_NAME": "qwen-max",
+    "DEFAULT_LLM_API_KEY": "sk-f99d95012e9f4968ad4c25b5a71a54a3",
+    "DEFAULT_LLM_BASE_URL": "https://dashscope.aliyuncs.com/compatible-mode/v1"
+  },
+  "updated_at": "2025-12-28T23:28:57.029487"
+}

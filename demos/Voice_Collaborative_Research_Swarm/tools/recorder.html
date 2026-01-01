@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>AI 语音控制台</title>
+    <style>
+        /* 简单的样式 */
+        body { font-family: 'Segoe UI', sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; background-color: #2c3e50; color: white; margin: 0; }
+        .mic-btn {
+            width: 120px; height: 120px; border-radius: 50%; border: none; cursor: pointer;
+            background: #e74c3c; box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.7);
+            font-size: 40px; color: white; transition: all 0.3s; display: flex; align-items: center; justify-content: center;
+        }
+        .mic-btn.recording { animation: pulse 1.5s infinite; background: #c0392b; }
+        .mic-btn:active { transform: scale(0.95); }
+        .status { margin-top: 30px; font-size: 18px; color: #ecf0f1; height: 30px;}
+        .tips { margin-top: 10px; font-size: 12px; color: #95a5a6; }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 20px rgba(231, 76, 60, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(231, 76, 60, 0); }
+        }
+    </style>
+</head>
+<body>
+
+    <button id="recordBtn" class="mic-btn">🎙️</button>
+    <div id="status" class="status">按住说话，松开发送</div>
+    <div class="tips">录音将自动提交给 Research Team</div>
+
+<script>
+    const UPLOAD_API = "http://localhost:8081/upload"; 
+    let mediaRecorder;
+    let audioChunks = [];
+    const btn = document.getElementById('recordBtn');
+    const status = document.getElementById('status');
+
+    navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+        mediaRecorder = new MediaRecorder(stream);
+        mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+        mediaRecorder.onstop = uploadAudio;
+    }).catch(e => {
+        status.innerText = "❌ 请允许麦克风权限";
+        btn.style.background = "#7f8c8d";
+    });
+
+    btn.addEventListener('mousedown', () => {
+        if (mediaRecorder && mediaRecorder.state === "inactive") {
+            audioChunks = [];
+            mediaRecorder.start();
+            btn.classList.add('recording');
+            status.innerText = "正在聆听...";
+        }
+    });
+
+    btn.addEventListener('mouseup', () => {
+        if (mediaRecorder && mediaRecorder.state === "recording") {
+            mediaRecorder.stop();
+            btn.classList.remove('recording');
+            status.innerText = "正在处理...";
+        }
+    });
+
+    async function uploadAudio() {
+        const blob = new Blob(audioChunks, { type: 'audio/wav' });
+        const formData = new FormData();
+        formData.append("file", blob, "voice_cmd.wav");
+
+        try {
+            status.innerText = "🚀 发送给 Agent...";
+            const res = await fetch(UPLOAD_API, { method: "POST", body: formData });
+            const data = await res.json();
+            
+            if (data.status === "success" || data.path) {
+                status.innerText = "✅ 指令已送达！请看聊天窗口";
+                setTimeout(() => status.innerText = "按住说话，松开发送", 3000);
+            } else {
+                status.innerText = "⚠️ 上传异常";
+            }
+        } catch (e) {
+            console.error(e);
+            status.innerText = "❌ 连接失败 (检查 upload_server)";
+        }
+    }
+</script>
+</body>
+</html>

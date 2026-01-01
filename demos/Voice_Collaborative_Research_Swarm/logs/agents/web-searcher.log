@@ -1,0 +1,42 @@
+
+============================================================
+[2025-12-28 23:29:07] Starting agent 'web-searcher'
+============================================================
+
+[23:29:08] INFO     AgentConfig includes 3 custom tools                                                                                                                                  
+           INFO     Processed 3 enabled mods: ['openagents.mods.workspace.project', 'openagents.mods.workspace.default', 'openagents.mods.workspace.messaging']                          
+           INFO     Creating openagents.agents.collaborator_agent.CollaboratorAgent instance with ID 'web-searcher'                                                                      
+           INFO     Successfully loaded mod adapter: openagents.mods.workspace.project                                                                                                   
+           INFO     Instantiated adapter for openagents.mods.workspace.project (no args)                                                                                                 
+           INFO     Successfully loaded mod adapter: openagents.mods.workspace.default                                                                                                   
+           INFO     Instantiated adapter for openagents.mods.workspace.default (with mod_name)                                                                                           
+           INFO     Successfully loaded mod adapter: openagents.mods.workspace.messaging                                                                                                 
+           INFO     Instantiated adapter for openagents.mods.workspace.messaging (no args)                                                                                               
+           INFO     Registered mod adapter DefaultProjectAgentAdapter with agent web-searcher                                                                                            
+           INFO     Registered mod adapter DefaultWorkspaceAgentAdapter with agent web-searcher                                                                                          
+           INFO     Initializing Thread Messaging protocol for agent web-searcher with file storage at /tmp/openagents_agent_web-searcher_threads_0zc3kmqz                               
+           INFO     Registered mod adapter ThreadMessagingAgentAdapter with agent web-searcher                                                                                           
+           ERROR    Failed to load custom tools from agent config: Failed to create tool 'search_web': Could not import module 'tools.web_search': No module named 'tools'               
+           INFO     Updated available tools for agent web-searcher: ['list_project_templates', 'start_project', 'stop_project', 'complete_project', 'get_project',                       
+                    'send_project_message', 'set_project_global_state', 'get_project_global_state', 'list_project_global_state', 'delete_project_global_state',                          
+                    'set_project_agent_state', 'get_project_agent_state', 'list_project_agent_state', 'delete_project_agent_state', 'set_project_artifact', 'get_project_artifact',      
+                    'list_project_artifacts', 'delete_project_artifact', 'send_event', 'send_direct_message', 'send_channel_message', 'reply_channel_message', 'list_channels',          
+                    'retrieve_channel_messages', 'retrieve_direct_messages', 'react_to_message']                                                                                         
+           INFO     Successfully loaded openagents.agents.collaborator_agent.CollaboratorAgent 'web-searcher' from                                                                       
+                    /media/data3/macy/openagents/demos/03_research_team/agents/web_searcher.yaml                                                                                         
+           INFO     ✅ Successfully retrieved health check from http://localhost:8700/api/health                                                                                         
+           INFO     Detected network: ResearchTeam (research-team-1)                                                                                                                     
+           INFO     Transport: grpc, Host: localhost, Port: 8600                                                                                                                         
+           INFO     Creating gRPC connector for agent web-searcher                                                                                                                       
+[23:29:09] INFO     Connecting to gRPC server at localhost:8600                                                                                                                          
+           ERROR    Agent registration failed: Agent web-searcher already registered with network                                                                                        
+           INFO     Cleaning up MCP clients                                                                                                                                              
+           INFO     Agent web-searcher disconnected from gRPC network                                                                                                                    
+Error: Failed to start agent: Failed to connect to server
+           INFO     Cleaning up MCP clients                                                                                                                                              
+           INFO     Agent web-searcher disconnected from gRPC network                                                                                                                    
+⠙ ❌ Failed to start agent: Failed to start agent: Failed to connect to server
+
+[2025-12-28 23:29:09] Process terminated with exit code 1
+============================================================
+

@@ -1,0 +1,51 @@
+# Analyst Agent
+type: "openagents.agents.collaborator_agent.CollaboratorAgent"
+agent_id: "analyst"
+
+config:
+  model_name: "qwen3-30b-a3b"
+  max_iterations: 3
+
+  instruction: |
+    You are the ANALYST. Professional and Insightful.
+    
+    RULE:
+    1. Analyze data.
+    2. Post FINAL REPORT to chat.
+    3. Notify Router.
+
+  react_to_all_messages: false
+
+  triggers:
+    # 🟢 统一监听 task.delegate
+    - event: "task.delegate"
+      instruction: |
+        Data: payload.results
+        ProjectID: payload.project_id
+
+        1. Analyze data.
+        
+        2. **Speak:** Call `send_project_message`:
+           - project_id: ProjectID
+           - content: {"text": "🧐 **深度分析报告**\n\n(收到数据，感谢 Web Searcher。以下是我的解读：)\n\n### 1. 核心洞察\n[Summary...]\n\n### 2. 关键情报\n[Details...]\n\n### 3. 🧠 专家视角\n[Your Insight]\n"}
+
+        3. **Notify:** Call `send_event`:
+           - event_name: "task.complete"
+           - destination_id: "router"
+           - payload: {"status": "success"}
+
+        4. finish()
+
+mods:
+  - name: "openagents.mods.workspace.project"
+    enabled: true
+  - name: "openagents.mods.workspace.default"
+    enabled: true
+  - name: "openagents.mods.workspace.messaging"
+    enabled: true
+
+connection:
+  host: "localhost"
+  port: 8700
+  transport: "grpc"
+  password_hash: "3588bb7219b1faa3d01f132a0c60a394258ccc3049d8e4a243b737e62524d147"
