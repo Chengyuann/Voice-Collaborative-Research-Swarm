@@ -5,6 +5,9 @@
 
 ![Status](https://img.shields.io/badge/Status-Active-success) ![Python](https://img.shields.io/badge/Python-3.10%2B-blue) ![OpenAgents](https://img.shields.io/badge/Powered%20by-OpenAgents-orange) ![LLM](https://img.shields.io/badge/Model-Qwen%20Max-violet)
 
+
+<img width="1458" height="1017" alt="image" src="https://github.com/user-attachments/assets/e262f945-413d-4ce3-a3e4-52d05ff4e919" />
+
 ## 📖 Executive Summary
 
 **NexusAI** is an advanced multi-agent system designed to automate the lifecycle of complex information research. Unlike traditional search engines, NexusAI operates as a **hierarchical swarm**:
